@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="app-container">
         <header>
@@ -28,8 +30,10 @@
             <section id="screen-landing" class="screen active">
                 <div class="card analyzer">
                     <h1>Your Intelligent Symptom Assessment Assistant</h1>
-                    <p>Get instant clarity on your health concerns using our expert-driven diagnostic reasoning system. Simple, fast, and reliable.</p>
-                    <img src="https://img.freepik.com/free-vector/doctor-character-background_1270-84.jpg" alt="Medical Illustration" style="max-width:300px; margin-bottom: 2rem;">
+                    <p>Get instant clarity on your health concerns using our expert-driven diagnostic reasoning system.
+                        Simple, fast, and reliable.</p>
+                    <img src="https://img.freepik.com/free-vector/doctor-character-background_1270-84.jpg"
+                        alt="Medical Illustration" style="max-width:300px; margin-bottom: 2rem;">
                     <div style="display: flex; justify-content: center; gap: 1rem;">
                         <button class="btn btn-primary" onclick="nextScreen('user-info')">
                             Start Diagnosis <i class="fas fa-arrow-right"></i>
@@ -46,7 +50,7 @@
                 <div class="card">
                     <h2>Tell us about yourself</h2>
                     <p>This information helps our expert system provide more accurate insights.</p>
-                    
+
                     <div class="form-group">
                         <label>Age</label>
                         <input type="number" id="user-age" placeholder="Enter your age" min="0" max="120">
@@ -66,7 +70,8 @@
                         <label>Existing Conditions (Select all that apply)</label>
                         <div class="checkbox-group">
                             <label class="checkbox-item"><input type="checkbox" value="diabetes"> Diabetes</label>
-                            <label class="checkbox-item"><input type="checkbox" value="hypertension"> Hypertension</label>
+                            <label class="checkbox-item"><input type="checkbox" value="hypertension">
+                                Hypertension</label>
                             <label class="checkbox-item"><input type="checkbox" value="asthma"> Asthma</label>
                             <label class="checkbox-item"><input type="checkbox" value="allergies"> Allergies</label>
                         </div>
@@ -79,7 +84,8 @@
 
                     <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                         <button class="btn btn-secondary" onclick="nextScreen('landing')">Back</button>
-                        <button class="btn btn-primary" onclick="validateUserInfo()">Next Step <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-primary" onclick="validateUserInfo()">Next Step <i
+                                class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
             </section>
@@ -89,22 +95,25 @@
                 <div class="card">
                     <h2>What symptoms are you experiencing?</h2>
                     <p>Select all the symptoms that apply to you today.</p>
-                    
+
                     <div class="form-group">
-                        <input type="text" id="symptom-search" placeholder="Search symptoms..." onkeyup="filterSymptoms()">
+                        <input type="text" id="symptom-search" placeholder="Search symptoms..."
+                            onkeyup="filterSymptoms()">
                     </div>
 
                     <div class="symptom-grid" id="symptomGrid">
                         <!-- Symptoms will be injected by JS -->
                     </div>
 
-                    <div id="selection-summary" style="margin-top: 1.5rem; padding: 1rem; background: var(--background); border-radius: var(--radius-sm); display: none;">
+                    <div id="selection-summary"
+                        style="margin-top: 1.5rem; padding: 1rem; background: var(--background); border-radius: var(--radius-sm); display: none;">
                         <strong>Selected:</strong> <span id="selected-list">None</span>
                     </div>
 
                     <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                         <button class="btn btn-secondary" onclick="nextScreen('user-info')">Back</button>
-                        <button class="btn btn-primary" id="btn-to-followup" disabled onclick="nextScreen('follow-up')">Continue <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-primary" id="btn-to-followup" disabled
+                            onclick="nextScreen('follow-up')">Continue <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
             </section>
@@ -115,10 +124,11 @@
                     <div id="follow-up-container">
                         <!-- Questions will be injected dynamically -->
                     </div>
-                    
+
                     <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                         <button class="btn btn-secondary" onclick="nextScreen('symptoms')">Back</button>
-                        <button class="btn btn-primary" onclick="startAnalysis()">Run Expert Analysis <i class="fas fa-microchip"></i></button>
+                        <button class="btn btn-primary" onclick="startAnalysis()">Run Expert Analysis <i
+                                class="fas fa-microchip"></i></button>
                     </div>
                 </div>
             </section>
@@ -128,7 +138,8 @@
                 <div class="card analyzer">
                     <div class="pulse"></div>
                     <h2>Expert Reasoning in Progress</h2>
-                    <p id="analysis-text">The system is currently evaluating your symptoms against our medical knowledge base.</p>
+                    <p id="analysis-text">The system is currently evaluating your symptoms against our medical knowledge
+                        base.</p>
                     <div class="analysis-steps" id="analysis-steps">
                         <!-- Simulated reasoning steps -->
                     </div>
@@ -140,18 +151,20 @@
                 <div class="card">
                     <h2>Analysis Results</h2>
                     <p>Based on the expert reasoning engine, here are the potential conditions.</p>
-                    
+
                     <div id="results-list">
                         <!-- Results cards injected by JS -->
                     </div>
 
                     <div class="disclaimer">
                         <i class="fas fa-triangle-exclamation"></i>
-                        <strong>Disclaimer:</strong> This is an academic expert system for demonstration purposes. These results are not medical advice. Consult a professional doctor if symptoms persist.
+                        <strong>Disclaimer:</strong> This is an academic expert system for demonstration purposes. These
+                        results are not medical advice. Consult a professional doctor if symptoms persist.
                     </div>
 
                     <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                        <button class="btn btn-primary" onclick="nextScreen('recommendations')">View Recommendations <i class="fas fa-file-medical"></i></button>
+                        <button class="btn btn-primary" onclick="nextScreen('recommendations')">View Recommendations <i
+                                class="fas fa-file-medical"></i></button>
                         <button class="btn btn-secondary" onclick="location.reload()">New Assessment</button>
                     </div>
                 </div>
@@ -164,10 +177,11 @@
                     <div id="recommendations-content">
                         <!-- Content injected by JS -->
                     </div>
-                    
+
                     <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                         <button class="btn btn-secondary" onclick="nextScreen('results')">Back to Results</button>
-                        <button class="btn btn-primary" onclick="nextScreen('history')">View Dashboard <i class="fas fa-chart-line"></i></button>
+                        <button class="btn btn-primary" onclick="nextScreen('history')">View Dashboard <i
+                                class="fas fa-chart-line"></i></button>
                     </div>
                 </div>
             </section>
@@ -175,11 +189,12 @@
             <!-- Screen 8: History Dashboard -->
             <section id="screen-history" class="screen">
                 <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                         <h2>Recent Consultations</h2>
                         <button class="btn btn-secondary" onclick="clearHistory()">Clear History</button>
                     </div>
-                    
+
                     <div id="history-list">
                         <!-- History items injected by JS -->
                     </div>
@@ -192,6 +207,7 @@
         </main>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
+
 </html>
