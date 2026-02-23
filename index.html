@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Health Advisor | Expert Symptom Diagnosis</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-heart-pulse"></i>
+                Smart Health Advisor
+            </div>
+        </header>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <main id="app">
+            <!-- Screen 1: Landing -->
+            <section id="screen-landing" class="screen active">
+                <div class="card analyzer">
+                    <h1>Your Intelligent Symptom Assessment Assistant</h1>
+                    <p>Get instant clarity on your health concerns using our expert-driven diagnostic reasoning system. Simple, fast, and reliable.</p>
+                    <img src="https://img.freepik.com/free-vector/doctor-character-background_1270-84.jpg" alt="Medical Illustration" style="max-width:300px; margin-bottom: 2rem;">
+                    <div style="display: flex; justify-content: center; gap: 1rem;">
+                        <button class="btn btn-primary" onclick="nextScreen('user-info')">
+                            Start Diagnosis <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button class="btn btn-secondary" onclick="nextScreen('history')">
+                            View History <i class="fas fa-clock-rotate-left"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen 2: User Information -->
+            <section id="screen-user-info" class="screen">
+                <div class="card">
+                    <h2>Tell us about yourself</h2>
+                    <p>This information helps our expert system provide more accurate insights.</p>
+                    
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="user-age" placeholder="Enter your age" min="0" max="120">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="user-gender">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Existing Conditions (Select all that apply)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item"><input type="checkbox" value="diabetes"> Diabetes</label>
+                            <label class="checkbox-item"><input type="checkbox" value="hypertension"> Hypertension</label>
+                            <label class="checkbox-item"><input type="checkbox" value="asthma"> Asthma</label>
+                            <label class="checkbox-item"><input type="checkbox" value="allergies"> Allergies</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Location (Optional)</label>
+                        <input type="text" id="user-location" placeholder="e.g. London, UK">
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button class="btn btn-secondary" onclick="nextScreen('landing')">Back</button>
+                        <button class="btn btn-primary" onclick="validateUserInfo()">Next Step <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen 3: Symptom Selection -->
+            <section id="screen-symptoms" class="screen">
+                <div class="card">
+                    <h2>What symptoms are you experiencing?</h2>
+                    <p>Select all the symptoms that apply to you today.</p>
+                    
+                    <div class="form-group">
+                        <input type="text" id="symptom-search" placeholder="Search symptoms..." onkeyup="filterSymptoms()">
+                    </div>
+
+                    <div class="symptom-grid" id="symptomGrid">
+                        <!-- Symptoms will be injected by JS -->
+                    </div>
+
+                    <div id="selection-summary" style="margin-top: 1.5rem; padding: 1rem; background: var(--background); border-radius: var(--radius-sm); display: none;">
+                        <strong>Selected:</strong> <span id="selected-list">None</span>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button class="btn btn-secondary" onclick="nextScreen('user-info')">Back</button>
+                        <button class="btn btn-primary" id="btn-to-followup" disabled onclick="nextScreen('follow-up')">Continue <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen 4: Follow-up Questions -->
+            <section id="screen-follow-up" class="screen">
+                <div class="card">
+                    <div id="follow-up-container">
+                        <!-- Questions will be injected dynamically -->
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button class="btn btn-secondary" onclick="nextScreen('symptoms')">Back</button>
+                        <button class="btn btn-primary" onclick="startAnalysis()">Run Expert Analysis <i class="fas fa-microchip"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen 5: Expert Analysis (Loading) -->
+            <section id="screen-analysis" class="screen">
+                <div class="card analyzer">
+                    <div class="pulse"></div>
+                    <h2>Expert Reasoning in Progress</h2>
+                    <p id="analysis-text">The system is currently evaluating your symptoms against our medical knowledge base.</p>
+                    <div class="analysis-steps" id="analysis-steps">
+                        <!-- Simulated reasoning steps -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen 6: Diagnosis Results -->
+            <section id="screen-results" class="screen">
+                <div class="card">
+                    <h2>Analysis Results</h2>
+                    <p>Based on the expert reasoning engine, here are the potential conditions.</p>
+                    
+                    <div id="results-list">
+                        <!-- Results cards injected by JS -->
+                    </div>
+
+                    <div class="disclaimer">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        <strong>Disclaimer:</strong> This is an academic expert system for demonstration purposes. These results are not medical advice. Consult a professional doctor if symptoms persist.
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button class="btn btn-primary" onclick="nextScreen('recommendations')">View Recommendations <i class="fas fa-file-medical"></i></button>
+                        <button class="btn btn-secondary" onclick="location.reload()">New Assessment</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen 7: Recommendations -->
+            <section id="screen-recommendations" class="screen">
+                <div class="card">
+                    <h2>Expert Recommendations</h2>
+                    <div id="recommendations-content">
+                        <!-- Content injected by JS -->
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button class="btn btn-secondary" onclick="nextScreen('results')">Back to Results</button>
+                        <button class="btn btn-primary" onclick="nextScreen('history')">View Dashboard <i class="fas fa-chart-line"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen 8: History Dashboard -->
+            <section id="screen-history" class="screen">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>Recent Consultations</h2>
+                        <button class="btn btn-secondary" onclick="clearHistory()">Clear History</button>
+                    </div>
+                    
+                    <div id="history-list">
+                        <!-- History items injected by JS -->
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button class="btn btn-primary" onclick="nextScreen('landing')">Back to Home</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
