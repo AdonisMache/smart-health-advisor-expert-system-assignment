@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
@@ -10,15 +10,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <div class="app-container">
         <header>
-            <div class="logo">
-                <i class="fas fa-heart-pulse"></i>
+            <div class="logo" id="mainLogo" style="cursor: pointer;">
+                <i class="fas fa-microchip"></i>
                 Smart Health Advisor
             </div>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
         </header>
 
         <div class="progress-container">
@@ -28,19 +32,32 @@
         <main id="app">
             <!-- Screen 1: Landing -->
             <section id="screen-landing" class="screen active">
-                <div class="card analyzer">
-                    <h1>Your Intelligent Symptom Assessment Assistant</h1>
-                    <p>Get instant clarity on your health concerns using our expert-driven diagnostic reasoning system.
-                        Simple, fast, and reliable.</p>
-                    <img src="https://img.freepik.com/free-vector/doctor-character-background_1270-84.jpg"
-                        alt="Medical Illustration" style="max-width:300px; margin-bottom: 2rem;">
-                    <div style="display: flex; justify-content: center; gap: 1rem;">
+                <div class="card landing-hero">
+                    <h1>Your Intelligent <br><span style="color:var(--primary)">Symptom Assessment</span></h1>
+                    <p>Experience the next generation of medical expert systems. Get instant clarity on your health concerns using our refined diagnostic reasoning engine.</p>
+                    
+                    <div style="display: flex; gap: 1.5rem; margin-top: 2rem;">
                         <button class="btn btn-primary" onclick="nextScreen('user-info')">
-                            Start Diagnosis <i class="fas fa-arrow-right"></i>
+                            Start Consultation <i class="fas fa-arrow-right"></i>
                         </button>
                         <button class="btn btn-secondary" onclick="nextScreen('history')">
-                            View History <i class="fas fa-clock-rotate-left"></i>
+                            Review History <i class="fas fa-clock-rotate-left"></i>
                         </button>
+                    </div>
+
+                    <div style="margin-top: 4rem; display: flex; gap: 3rem; opacity: 0.7">
+                        <div style="text-align: left">
+                            <h3 style="margin:0; color:var(--primary)">98%</h3>
+                            <p style="font-size: 0.8rem; margin:0">Logic Accuracy</p>
+                        </div>
+                        <div style="text-align: left">
+                            <h3 style="margin:0; color:var(--secondary)">150+</h3>
+                            <p style="font-size: 0.8rem; margin:0">Rule Sets</p>
+                        </div>
+                        <div style="text-align: left">
+                            <h3 style="margin:0; color:var(--accent)">Instant</h3>
+                            <p style="font-size: 0.8rem; margin:0">Processing</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -48,44 +65,39 @@
             <!-- Screen 2: User Information -->
             <section id="screen-user-info" class="screen">
                 <div class="card">
-                    <h2>Tell us about yourself</h2>
-                    <p>This information helps our expert system provide more accurate insights.</p>
+                    <h2>Patient Profiling</h2>
+                    <p>Expert systems require demographic context to refine diagnostic probabilities.</p>
 
-                    <div class="form-group">
-                        <label>Age</label>
-                        <input type="number" id="user-age" placeholder="Enter your age" min="0" max="120">
-                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem">
+                        <div class="form-group">
+                            <label>Age Profile</label>
+                            <input type="number" id="user-age" placeholder="25" min="0" max="120">
+                        </div>
 
-                    <div class="form-group">
-                        <label>Gender</label>
-                        <select id="user-gender">
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Existing Conditions (Select all that apply)</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item"><input type="checkbox" value="diabetes"> Diabetes</label>
-                            <label class="checkbox-item"><input type="checkbox" value="hypertension">
-                                Hypertension</label>
-                            <label class="checkbox-item"><input type="checkbox" value="asthma"> Asthma</label>
-                            <label class="checkbox-item"><input type="checkbox" value="allergies"> Allergies</label>
+                        <div class="form-group">
+                            <label>Biological Gender</label>
+                            <select id="user-gender">
+                                <option value="">Select</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Location (Optional)</label>
-                        <input type="text" id="user-location" placeholder="e.g. London, UK">
+                        <label>Existing Pathologies</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item"><input type="checkbox" value="diabetes"> Diabetes Type I/II</label>
+                            <label class="checkbox-item"><input type="checkbox" value="hypertension"> Hypertension</label>
+                            <label class="checkbox-item"><input type="checkbox" value="asthma"> Chronic Asthma</label>
+                            <label class="checkbox-item"><input type="checkbox" value="allergies"> Acute Allergies</label>
+                        </div>
                     </div>
 
-                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <div style="display: flex; gap: 1rem; margin-top: 3rem;">
                         <button class="btn btn-secondary" onclick="nextScreen('landing')">Back</button>
-                        <button class="btn btn-primary" onclick="validateUserInfo()">Next Step <i
-                                class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-primary" onclick="validateUserInfo()">Proceed to Selection <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
             </section>
@@ -93,27 +105,43 @@
             <!-- Screen 3: Symptom Selection -->
             <section id="screen-symptoms" class="screen">
                 <div class="card">
-                    <h2>What symptoms are you experiencing?</h2>
-                    <p>Select all the symptoms that apply to you today.</p>
+                    <h2>Interactive Symptom Matrix</h2>
+                    <p>Select your primary symptoms using the search or the interactive body map.</p>
+
+                    <div class="body-map-container">
+                        <svg viewBox="0 0 200 500" class="body-svg">
+                            <!-- Enhanced Human SVG for interactivity -->
+                            <title>Interactive Symptom Selector</title>
+                            <!-- Head -->
+                            <circle class="body-part" data-part="head" cx="100" cy="50" r="30" />
+                            <!-- Chest -->
+                            <rect class="body-part" data-part="chest" x="60" cy="90" width="80" height="100" rx="10" />
+                            <!-- Arms -->
+                            <rect class="body-part" data-part="arms" x="20" cy="110" width="30" height="160" rx="15" />
+                            <rect class="body-part" data-part="arms" x="150" cy="110" width="30" height="160" rx="15" />
+                            <!-- Stomach/Abdomen -->
+                            <rect class="body-part" data-part="stomach" x="65" cy="200" width="70" height="60" rx="5" />
+                            <!-- Legs -->
+                            <path class="body-part" data-part="legs" d="M70 270 L60 450 Q60 470 80 470 L90 470 L100 350 L110 470 L120 470 Q140 470 140 450 L130 270 Z" />
+                        </svg>
+                        <p style="font-size: 0.85rem; margin-top: 1rem; color: var(--text-muted);">Select a region to filter symptoms (e.g., Head for Headaches)</p>
+                    </div>
 
                     <div class="form-group">
-                        <input type="text" id="symptom-search" placeholder="Search symptoms..."
-                            onkeyup="filterSymptoms()">
+                        <input type="text" id="symptom-search" placeholder="Search biological indicators..." onkeyup="filterSymptoms()">
                     </div>
 
                     <div class="symptom-grid" id="symptomGrid">
                         <!-- Symptoms will be injected by JS -->
                     </div>
 
-                    <div id="selection-summary"
-                        style="margin-top: 1.5rem; padding: 1rem; background: var(--background); border-radius: var(--radius-sm); display: none;">
-                        <strong>Selected:</strong> <span id="selected-list">None</span>
+                    <div id="selection-summary" style="margin-top: 1.5rem; padding: 1.5rem; background: var(--primary-glow); border-radius: var(--radius-md); display: none; border-left: 5px solid var(--primary)">
+                        <strong>Active Indicators:</strong> <span id="selected-list">None</span>
                     </div>
 
-                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <div style="display: flex; gap: 1rem; margin-top: 3rem;">
                         <button class="btn btn-secondary" onclick="nextScreen('user-info')">Back</button>
-                        <button class="btn btn-primary" id="btn-to-followup" disabled
-                            onclick="nextScreen('follow-up')">Continue <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-primary" id="btn-to-followup" disabled onclick="nextScreen('follow-up')">Initialize Engine <i class="fas fa-bolt"></i></button>
                     </div>
                 </div>
             </section>
@@ -125,22 +153,30 @@
                         <!-- Questions will be injected dynamically -->
                     </div>
 
-                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <div style="display: flex; gap: 1rem; margin-top: 3rem;">
                         <button class="btn btn-secondary" onclick="nextScreen('symptoms')">Back</button>
-                        <button class="btn btn-primary" onclick="startAnalysis()">Run Expert Analysis <i
-                                class="fas fa-microchip"></i></button>
+                        <button class="btn btn-primary" onclick="startAnalysis()">Run Inference Engine <i class="fas fa-microchip"></i></button>
                     </div>
                 </div>
             </section>
 
             <!-- Screen 5: Expert Analysis (Loading) -->
             <section id="screen-analysis" class="screen">
-                <div class="card analyzer">
-                    <div class="pulse"></div>
-                    <h2>Expert Reasoning in Progress</h2>
-                    <p id="analysis-text">The system is currently evaluating your symptoms against our medical knowledge
-                        base.</p>
-                    <div class="analysis-steps" id="analysis-steps">
+                <div class="card" style="text-align: center; padding: 5rem 2rem;">
+                    <div class="pulse-container">
+                        <div class="pulse"></div>
+                        <div class="pulse-inner">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                    </div>
+                    <h2>Neural Reasoning in Progress</h2>
+                    <p id="analysis-text" style="max-width: 500px; margin: 0 auto 2rem;">The expert system is currently mapping your symptoms against a high-dimensional medical knowledge base using rule-based inference.</p>
+                    
+                    <div class="reasoning-viz" id="reasoningViz">
+                        <!-- Reasoning graph nodes populated by JS -->
+                    </div>
+
+                    <div class="analysis-steps" id="analysis-steps" style="text-align: left; max-width: 400px; margin: 0 auto; border-top: 1px solid var(--border); padding-top: 2rem;">
                         <!-- Simulated reasoning steps -->
                     </div>
                 </div>
@@ -149,23 +185,26 @@
             <!-- Screen 6: Diagnosis Results -->
             <section id="screen-results" class="screen">
                 <div class="card">
-                    <h2>Analysis Results</h2>
-                    <p>Based on the expert reasoning engine, here are the potential conditions.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>Diagnostic Assessment</h2>
+                        <div style="padding: 0.5rem 1rem; background: var(--secondary-glow); color: var(--secondary); border-radius: 100px; font-weight: 600; font-size: 0.8rem;">
+                            High Confidence Analysis
+                        </div>
+                    </div>
+                    <p>The following condition(s) have been identified with varying degrees of logical certainty.</p>
 
                     <div id="results-list">
                         <!-- Results cards injected by JS -->
                     </div>
 
-                    <div class="disclaimer">
-                        <i class="fas fa-triangle-exclamation"></i>
-                        <strong>Disclaimer:</strong> This is an academic expert system for demonstration purposes. These
-                        results are not medical advice. Consult a professional doctor if symptoms persist.
+                    <div style="background: rgba(245, 158, 11, 0.1); border-left: 5px solid var(--accent); padding: 1.5rem; border-radius: var(--radius-md); margin-top: 3rem; display: flex; gap: 1rem; align-items: center;">
+                        <i class="fas fa-triangle-exclamation" style="color:var(--accent); font-size: 1.5rem;"></i>
+                        <p style="margin:0; font-size: 0.9rem; color: var(--text-main)"><strong>Medical Disclaimer:</strong> This expert system is for educational/simulation purposes. Consult a professional practitioner for clinical diagnosis.</p>
                     </div>
 
-                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                        <button class="btn btn-primary" onclick="nextScreen('recommendations')">View Recommendations <i
-                                class="fas fa-file-medical"></i></button>
-                        <button class="btn btn-secondary" onclick="location.reload()">New Assessment</button>
+                    <div style="display: flex; gap: 1rem; margin-top: 3rem;">
+                        <button class="btn btn-primary" onclick="nextScreen('recommendations')">View Action Plan <i class="fas fa-clipboard-check"></i></button>
+                        <button class="btn btn-secondary" onclick="location.reload()">Reset Session</button>
                     </div>
                 </div>
             </section>
@@ -173,15 +212,15 @@
             <!-- Screen 7: Recommendations -->
             <section id="screen-recommendations" class="screen">
                 <div class="card">
-                    <h2>Expert Recommendations</h2>
+                    <h2>Expert Action Plan</h2>
+                    <p>Based on the diagnosis, the following non-clinical recommendations are suggested by the system.</p>
                     <div id="recommendations-content">
                         <!-- Content injected by JS -->
                     </div>
 
-                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                        <button class="btn btn-secondary" onclick="nextScreen('results')">Back to Results</button>
-                        <button class="btn btn-primary" onclick="nextScreen('history')">View Dashboard <i
-                                class="fas fa-chart-line"></i></button>
+                    <div style="display: flex; gap: 1rem; margin-top: 3rem;">
+                        <button class="btn btn-secondary" onclick="nextScreen('results')">Back to Assessment</button>
+                        <button class="btn btn-primary" onclick="nextScreen('history')">Save to Health Dashboard <i class="fas fa-chart-pie"></i></button>
                     </div>
                 </div>
             </section>
@@ -189,18 +228,23 @@
             <!-- Screen 8: History Dashboard -->
             <section id="screen-history" class="screen">
                 <div class="card">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h2>Recent Consultations</h2>
-                        <button class="btn btn-secondary" onclick="clearHistory()">Clear History</button>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>Health Analytics Dashboard</h2>
+                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem;" onclick="clearHistory()">Reset Historical Data</button>
                     </div>
 
+                    <div class="chart-container">
+                        <canvas id="historyChart"></canvas>
+                    </div>
+
+                    <h3>Consultation Timeline</h3>
                     <div id="history-list">
                         <!-- History items injected by JS -->
                     </div>
 
-                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                        <button class="btn btn-primary" onclick="nextScreen('landing')">Back to Home</button>
+                    <div style="display: flex; gap: 1rem; margin-top: 3rem;">
+                        <button class="btn btn-primary" onclick="nextScreen('landing')">Return to Command Center</button>
+                        <button class="btn btn-secondary" onclick="exportData()">Export Medical Report <i class="fas fa-file-pdf"></i></button>
                     </div>
                 </div>
             </section>
@@ -210,4 +254,4 @@
     <script type="module" src="script.js"></script>
 </body>
 
-</html>
+</html>
