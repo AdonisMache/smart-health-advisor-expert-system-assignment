@@ -7,7 +7,10 @@
 let currentState = {
     screen: 'landing',
     theme: localStorage.getItem('healthTheme') || 'light',
-    userInfo: {},
+    userInfo: {
+        age: 34,
+        gender: 'male'
+    },
     selectedSymptoms: [],
     activeBodyPart: null,
     results: [],
@@ -78,21 +81,33 @@ function toggleTheme() {
 
 // --- Screen 2: Patient Profiling ---
 function validateUserInfo() {
-    const age = document.getElementById('user-age').value;
-    const gender = document.getElementById('user-gender').value;
-    
-    if (!age || !gender) {
-        alert('Demographic data is essential for expert inference.');
-        return;
+    try {
+        const ageInput = document.getElementById('user-age');
+        const genderInput = document.getElementById('user-gender');
+        
+        if (!ageInput || !genderInput) {
+            console.error("Critical Input Components Missing");
+            return;
+        }
+
+        const age = ageInput.value;
+        const gender = genderInput.value;
+        
+        if (!age || !gender) {
+            alert('Demographic data is essential for accurate expert inference.');
+            return;
+        }
+
+        currentState.userInfo = {
+            age,
+            gender,
+            conditions: Array.from(document.querySelectorAll('.checkbox-item input:checked')).map(c => c.value)
+        };
+
+        window.nextScreen('symptoms');
+    } catch (err) {
+        console.error("Validation Error:", err);
     }
-
-    currentState.userInfo = {
-        age,
-        gender,
-        conditions: Array.from(document.querySelectorAll('.checkbox-item input:checked')).map(c => c.value)
-    };
-
-    nextScreen('symptoms');
 }
 
 // --- Screen 3: Symptom Matrix ---
@@ -405,6 +420,7 @@ function calculateWellnessScore() {
 
 function saveToHistory() {
     const entry = {
+        id: 'REF-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
         date: new Date().toLocaleDateString(),
         fullDate: new Date().toLocaleString(),
         symptoms: currentState.selectedSymptoms.length,
@@ -505,17 +521,49 @@ function initHistoryChart() {
 }
 
 function exportData() {
-    const reportData = {
-        meta: { system: "Smart Health Advisor V2.0", exportDate: new Date().toISOString() },
-        user: currentState.userInfo,
-        history: currentState.history,
-        wellnessIndex: calculateWellnessScore()
-    };
-    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+    const reportText = `
+=========================================
+      SMART HEALTH ADVISOR REPORT
+=========================================
+Date of Analysis: ${new Date().toLocaleString()}
+System Kernel: V3.2.0-STABLE
+-----------------------------------------
+
+1. CLINICAL DEMOGRAPHICS
+-----------------------------------------
+Biological Age: ${currentState.userInfo.age || 'Not Recorded'}
+Biological Gender: ${currentState.userInfo.gender || 'Not Recorded'}
+Pre-existing Conditions: ${currentState.userInfo.conditions?.length > 0 ? currentState.userInfo.conditions.join(', ') : 'None Disclosed'}
+
+2. DIAGNOSTIC INFERENCE SUMMARY
+-----------------------------------------
+Primary Indicator: ${currentState.results[0]?.name || 'Unknown'}
+Engine Confidence: ${currentState.results[0]?.confidence || 0}%
+Indicator Pattern: ${currentState.results[0]?.type || 'General'}
+Biological Markers Identified: ${currentState.selectedSymptoms.length}
+
+3. COMPUTATIONAL RECOMMENDATIONS
+-----------------------------------------
+${currentState.results[0]?.warning ? 'CRITICAL: High intensity markers detected. Immediate clinical assessment advised.\n' : '- Standard protocol management applied'}
+- Review non-clinical action plan provided in session dashboard.
+
+4. LOGICAL HISTORY CONTEXT
+-----------------------------------------
+Historical Consultations: ${currentState.history.length}
+Recent Wellness Index: ${calculateWellnessScore()}/100
+
+-----------------------------------------
+DISCLAIMER: This report is a computational 
+model for educational simulation and should 
+not replace clinical diagnosis.
+=========================================
+    `.trim();
+
+    const blob = new Blob([reportText], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `HealthAnalysis_Report_${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `Clinical_Analysis_Report_${new Date().toISOString().split('T')[0]}.txt`;
     a.click();
 }
 
@@ -525,6 +573,20 @@ function clearHistory() {
         localStorage.removeItem('healthHistory');
         renderHistory();
         if (currentState.chartInstance) currentState.chartInstance.destroy();
+    }
+}
+
+function seedDummyData() {
+    if (currentState.history.length === 0) {
+        const dummyHistory = [
+            { id: 'REF-H4X92', date: '2026-03-05', fullDate: '3/5/2026, 2:30 PM', symptoms: 3, result: 'Viral Influenza (Flu)', confidence: 88, severity: 7 },
+            { id: 'REF-P2K11', date: '2026-02-15', fullDate: '2/15/2026, 10:15 AM', symptoms: 2, result: 'Upper Respiratory Infection', confidence: 72, severity: 4 },
+            { id: 'REF-M9L44', date: '2026-01-20', fullDate: '1/20/2026, 4:45 PM', symptoms: 1, result: 'Benign Symptom Cluster', confidence: 50, severity: 2 },
+            { id: 'REF-S1T88', date: '2025-12-10', fullDate: '12/10/2025, 9:00 AM', symptoms: 4, result: 'Gastroenteritis (Viral)', confidence: 82, severity: 6 },
+            { id: 'REF-R7V32', date: '2025-11-28', fullDate: '11/28/2025, 11:20 AM', symptoms: 2, result: 'Viral Influenza (Flu)', confidence: 65, severity: 5 }
+        ];
+        currentState.history = dummyHistory;
+        localStorage.setItem('healthHistory', JSON.stringify(dummyHistory));
     }
 }
 
@@ -540,6 +602,7 @@ window.clearHistory = clearHistory;
 // Initialize
 window.onload = () => {
     initTheme();
+    seedDummyData();
     
     // Theme Toggle
     const themeBtn = document.getElementById('themeToggle');
@@ -548,16 +611,52 @@ window.onload = () => {
     // Logo Navigation
     const logo = document.getElementById('mainLogo');
     if (logo) {
-        logo.onclick = () => nextScreen('landing');
+        logo.onclick = () => window.nextScreen('landing');
     }
+
+    // Pre-fill demo data
+    const ageInput = document.getElementById('user-age');
+    const genderInput = document.getElementById('user-gender');
+    if (ageInput) ageInput.value = currentState.userInfo.age;
+    if (genderInput) genderInput.value = currentState.userInfo.gender;
 
     updateProgressBar();
 };
 
-// Override nextScreen to include recommendation rendering and logging
-const originalNextScreen = nextScreen;
-window.nextScreen = function(id) {
+// Global API Exposure
+window.nextScreen = (id) => {
     console.log(`Navigating to screen: ${id}`);
     if (id === 'recommendations') renderRecommendations();
-    originalNextScreen(id);
+    
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    
+    const target = document.getElementById(`screen-${id}`);
+    if (target) {
+        target.classList.add('active');
+        currentState.screen = id;
+        
+        // Progress Bar
+        const total = screens.length;
+        const currentIdx = screens.indexOf(id);
+        const progress = ((currentIdx) / (total - 1)) * 100;
+        const bar = document.getElementById('progressBar');
+        if (bar) bar.style.width = `${progress}%`;
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Lifecycle Hooks
+    if (id === 'symptoms') renderSymptoms();
+    if (id === 'follow-up') renderFollowUps();
+    if (id === 'history') {
+        renderHistory();
+        setTimeout(initHistoryChart, 300); // Small delay for layout calculation
+    }
 };
+
+window.validateUserInfo = validateUserInfo;
+window.toggleSymptom = toggleSymptom;
+window.filterSymptoms = filterSymptoms;
+window.startAnalysis = startAnalysis;
+window.exportData = exportData;
+window.clearHistory = clearHistory;
